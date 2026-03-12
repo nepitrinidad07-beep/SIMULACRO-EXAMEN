@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>SaaS IT Management - ASIR</title>
+</head>
+<body>
+    <header>
+        <h1>SaaS de Gestión de Infraestructura IT</h1>
+    </header>
+
+    <main class="container">
+        {% for tabla, columnas in [
+            ('dispositivos', ['Hostname', 'Dirección IP']),
+            ('ubicaciones', ['Sala/Oficina', 'Número de Rack']),
+            ('software', ['Nombre App', 'Versión']),
+            ('usuarios', ['Nombre Completo', 'Cargo/Dpto'])
+        ] %}
+        <section class="card">
+            <h2>Gestionar {{ tabla|capitalize }}</h2>
+            <form action="/add/{{ tabla }}" method="POST" class="add-form">
+                <input type="text" name="val1" placeholder="{{ columnas[0] }}" required>
+                <input type="text" name="val2" placeholder="{{ columnas[1] }}" required>
+                <button type="submit" class="btn-save">Añadir</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>{{ columnas[0] }}</th>
+                        <th>{{ columnas[1] }}</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in [dispositivos, ubicaciones, software, usuarios][loop.index0] %}
+                    <tr>
+                        <td>{{ item['id'] }}</td>
+                        <td>{{ item[1] }}</td>
+                        <td>{{ item[2] }}</td>
+                        <td>
+                            <a href="/delete/{{ tabla }}/{{ item['id'] }}" class="btn-delete">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        {% endfor %}
+    </main>
+</body>
+</html>
